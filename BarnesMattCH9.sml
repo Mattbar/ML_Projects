@@ -65,15 +65,17 @@ val Fbxor = bxor([false, true, false, true]);
 (* Excercise 10 dupList of type a list -> a list *)
 
 fun dupList([]) = [] 
-    | dupList(x) = map(fn y => [y,y])x;
+    | dupList(x) = foldr(fn (a,b)=> a::a::b)[]x;
 
 val Dlist = dupList([1,2,3]);
 
 (* Excercise 11 fun myLength of type a list -> int *)
 fun myLength([]) = 0
     | myLength(x) = 1 + myLength(tl x);
+fun betterMylength(L) = foldl(fn(_,y)=> y+1)0 L;
 
 val Len = myLength([1,2,3,4,5]);
+val Blen = betterMylength([1,2,3,4,5]);
 val emptLen = myLength([]);
 
 (* Excercise 12 fun il2absrl of type int list -> real list*)
@@ -104,26 +106,23 @@ fun iconcat([]) = []
 
 val ICON = iconcat([[1,2],[3,4,5,6],[7]]);
 (* Excercise 17  fun max of type int list -> int*)
-(* fun max ([]) = []
-    | max([x]) = x
-    | max(x::xs) = foldr(fn(a,b) => if a > b then a else b)x(x::xs);
+fun max (x)= foldl(fn(a,b) => if a < b then b else a)(hd x) (tl x);
     (* map(fn y => if y > x then y::x)x; *)
 
-val MX = max([1,5,3,9,3]); *)
-(*(* Excercise 18 *)
-fun min ([]) = []
-    | min(x::xs) =
-        if x < min(xs) then x::min(xs)
-        else min(xs);
+val MX = max([1,5,3,9,3]);
+(* Excercise 18 *)
+fun min (x) = foldl(fn(a,b) => if a < b then a else b)(hd x)(tl x);
 
-val MN = min([1,5,3,9,3]); *)
+val MN = min([5,3,9,3]); *)
 (* Excercise 19 fun member of type a * a list -> bool*)
-fun member(e,L) =
+(* fun member(e,L) =
     let
         val TFL = map(fn y => if y = e then true else false)L;
     in
         bor(TFL)
-    end;
+    end; *)
+
+fun member(e, L) = foldr(fn(a,b) => b orelse a=e)false L;
 
 val MEM = member(3,[1,4,5,3,7]);
 (* Excercise 20 fun append of type a list -> a list -> a list*)
@@ -131,3 +130,12 @@ val MEM = member(3,[1,4,5,3,7]);
 fun append (L1, L2) = foldr (op ::) L2 L1 ;
 
 val L3 = append([1,2,3,4],[5,6,7,8]);
+
+(* fun il2rk x = map(real)x; = fn int list -> real list
+    fun ordList x = map ord x; = fn char list -> int list
+    fun squarList x = map(fn a=> a*a)x; = fn int list -> int list
+    fun multipairs L = map(fn(a,b) => a*b)L = fn (int * int) list -> int list
+    fun inclist L x = map(fn a => a+x)L = fn int list * int -> int list
+    fun g x a = 2 + a = 
+ *)
+
